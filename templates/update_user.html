@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bees Count App - Upload</title>
+
+    <link rel="stylesheet" href = "{{ url_for('static', filename = 'bootstrap/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src = "{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</head>
+
+<body class="upload-body">
+
+    <div class="container upload-container">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12 col-lg-12">
+
+                <!-- Start Form Container -->
+                <div class="upload-form-container">
+                    <form action="{{url_for('admin_update_users', id=id)}}" method="post" enctype="multipart/form-data">
+
+                        <h4>Update User</h4>
+
+                        {% if update_form_msg != None %}
+                            <div class="alert alert-danger alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ update_form_msg }}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label name="Image Category">Username</label>
+                            <input type="text" placeholder="Username" name="username" class="form-control" value="{{old_username}}" minlength="2" pattern="[A-Za-z]{1,}[0-9]{1,}" title="Alpha numeric username. (E.g. ab123)" autocomplete="off" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label name="SelectImg">Password</label>
+                            <input type="password" name="password" placeholder="Password" value="{{old_password}}" minlength="4" pattern="[A-Za-z!@#$*0-9]{1,}[0-9!@#$*]{1,}" title="Special characters allowed: !@#$* \n Alpha numeric username. (E.g. ab123)" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label name="SelectImg">Password</label>
+                            <input type="password" name="confirmpassword" placeholder="Confirm password" minlength="4" pattern="[A-Za-z!@#$*0-9]{1,}[0-9!@#$*]{1,}" title="Special characters allowed: !@#$* \n Alpha numeric username. (E.g. ab123)" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <input type="submit" name="submit" value="Update" class="btn form-btn">
+                    </form>
+                </div>
+                <!-- End form container -->
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

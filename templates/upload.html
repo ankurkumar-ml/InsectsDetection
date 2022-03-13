@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bees Count App - Upload</title>
+
+    <link rel="stylesheet" href = "{{ url_for('static', filename = 'bootstrap/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css') }}" type="text/css">
+
+    <script href = "{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</head>
+
+<body class="upload-body">
+
+    <div class="container upload-container">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12 col-lg-12">
+
+                <!-- Start Form Container -->
+                <div class="upload-form-container">
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <h4>Upload Images to Detect Bees</h4>
+
+                        <div class="form-group">
+                            <label name="Image Category">Select Image Category</label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Select category</option>
+                                <option value="Bees">Bees</option>
+                                <option value="Insect">Insect</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label name="SelectImg">Select Image (s)</label>
+                            <input type="file" name="file[]" multiple="" class="form-control" required>
+                        </div>
+
+                        <input type="submit" name="Submit" value="Submit" class="btn form-btn">
+                    </form>
+
+                    <div class="form-bottom-btn">
+                        <p>OR</p>
+                        <a href="{{ url_for('index') }}" class="btn form-btn">View Detected Insects</a>
+                    </div>
+
+                </div>
+                <!-- End form container -->
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

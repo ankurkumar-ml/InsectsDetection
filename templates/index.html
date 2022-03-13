@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bees Count App - Upload</title>
+
+    <link rel="stylesheet" href = "{{ url_for('static', filename = 'bootstrap/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src = "{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</head>
+
+<body>
+
+    <div class="index-header">
+        <h3>Insects Detection Application</h3>
+        <div class="header-right-sec">
+            <span>Logged in as : {{session['admin_username']}}</span> |
+            <span><button class="btn btn-primary btn-xs color-btn" onclick="window.location.href='{{ url_for( 'admin_logout') }}';">Logout</button></span>
+        </div>
+    </div>
+
+    <div class="container">
+
+        {% if msg == None %}
+            <br>
+            <div class="alert alert-info alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{msg}}
+            </div>
+        {% endif %}
+
+        <div class="row category-btns">
+
+            <div class="btn-group">
+                <button type="button" class="btn custom-btn" onclick="window.location.href='{{ url_for('admin_manage_users') }}'">Manage Users</button>
+            </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <div class="btn-group">
+                <button type="button" class="btn custom-btn" onclick="window.location.href='{{ url_for('admin_panel', category_opt='Bees') }}'">Bees</button>
+                <button type="button" class="btn custom-btn" onclick="window.location.href='{{ url_for('admin_panel', category_opt='Insects') }}'">Mosquito & Egg</button>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <!-- Start Form Container -->
+                <div class="upload-form-container">
+                    <form action="/admin_panel" method="post" enctype="multipart/form-data">
+                        <h4>Upload Images to Detect Bees</h4>
+                        {% if upload_form_msg != None %}
+                            <div class="alert alert-info alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ upload_form_msg }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label name="Image Category">Select Image Category</label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Select category</option>
+                                <option value="Bees">Bees</option>
+                                <option value="Insects">Insect</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label name="SelectImg">Select Image (s)</label>
+                            <input type="file" name="file[]" multiple="" class="form-control" required>
+                        </div>
+
+                        <input type="submit" name="upload" value="Upload" class="btn form-btn">
+                    </form>
+
+                </div>
+                <!-- End form container -->
+            </div>
+
+            <div class="col-sm-8 col-md-8 col-lg-8">
+                <div class="res-img-container">
+
+                    {% for row in img_rows %}
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <img src="{{ url_for('static', filename='upload/' + category_name + '/'+ row['src_img_name']) }}" alt="Actual Image">
+                            </div>
+
+                            <div class="col-md-4">
+                                <img src="{{ url_for('static', filename='predicted/' + category_name + '/'+ row['src_img_name']) }}" alt="Actual Image">
+                            </div>
+
+                            <div class="col-md-4 count-div">
+                                <div> <br><br><br>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Name: &nbsp;&nbsp;{{row['src_img_name']}}</li>
+                                        <li class="list-group-item">Uploaded on: {{row['uploaded_date']}}</li>
+                                        {% if category_opt == 'Bees' %}
+                                            <li class="list-group-item">Total Honey Bees: &emsp;{{row['bees_count']}}</li>
+                                        {%  elif category_opt == 'Insects' %}
+                                            <li class="list-group-item">Total Insects: &emsp;{{row['bees_count'][1:-1].split(",")[0]}}</li>
+                                            <li class="list-group-item">Total Eggs: &emsp;&nbsp;&nbsp;{{row['bees_count'][1:-1].split(",")[1]}}</li>
+                                        {% else %}
+                                            <li class="list-group-item">Total Honey Bees: &emsp;{{row['bees_count']}}</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+                            <ul class="pager">
+
+                                {% if prev_page==0 %}
+                                    <li class="disabled"><a href="{{ url_for('admin_panel', page=prev_page, category_opt=category_opt) }}"><span class="glyphicon glyphicon-arrow-left"></span> &nbsp;  Previous </a></li> &emsp;
+                                 {% else %}
+                                    <li><a href="{{ url_for('admin_panel', page=prev_page, category_opt=category_opt) }}"><span class="glyphicon glyphicon-arrow-left"></span> &nbsp;  Previous </a></li> &emsp;
+                                 {% endif %}
+
+                                 {% if next_page==total_pages+1 %}
+                                    <li class="disabled"><a href="{{ url_for('admin_panel', page=next_page, category_opt=category_opt) }}">Next &nbsp; <span class="glyphicon glyphicon-arrow-right"></span> </a></li>
+                                 {% else %}
+                                    <li><a href="{{ url_for('admin_panel', page=next_page, category_opt=category_opt) }}">Next &nbsp; <span class="glyphicon glyphicon-arrow-right"></span> </a></li>
+                                 {% endif %}
+                             </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</body>
+</html>

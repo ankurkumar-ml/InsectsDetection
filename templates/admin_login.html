@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bees Count App - Upload</title>
+
+    <link rel="stylesheet" href = "{{ url_for('static', filename = 'bootstrap/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src = "{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</head>
+
+<body class="upload-body">
+
+    <div class="container upload-container">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12 col-lg-12">
+
+                <!-- Start Form Container -->
+                <div class="upload-form-container">
+                    <form action="/admin_login" method="post" enctype="multipart/form-data">
+
+                        <h4>Admin Login Form</h4>
+
+                        {% if err_msg != None %}
+                            <div class="alert alert-danger alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ err_msg }}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label name="Image Category">Username</label>
+                            <input type="text" placeholder="Username" name="username" minlength="4" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label name="SelectImg">Password</label>
+                            <input type="password" name="password" placeholder="Password" minlength="4" pattern="[A-Za-z!@#$*0-9]{1,}[0-9!@#$*]{1,}" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <input type="submit" name="submit" value="Submit" class="btn form-btn">
+                    </form>
+                </div>
+                <!-- End form container -->
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</ht

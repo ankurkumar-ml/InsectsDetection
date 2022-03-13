@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bees Count App - Upload</title>
+
+    <link rel="stylesheet" href = "{{ url_for('static', filename = 'bootstrap/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src = "{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</head>
+
+<body>
+
+    <div class="index-header">
+        <h3>Insects Detection Application</h3>
+        <div class="header-right-sec">
+            <span>Logged in as : {{session['admin_username']}}</span> |
+            <span><button class="btn btn-primary btn-xs color-btn" onclick="window.location.href='{{ url_for( 'admin_logout') }}';">Logout</button></span>
+        </div>
+    </div>
+
+    <div class="container">
+
+        {% if msg == None %}
+            <br>
+            <div class="alert alert-info alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{msg}}
+            </div>
+        {% endif %}
+
+        <div class="row category-btns">
+
+            <div class="btn-group">
+                <button type="button" class="btn custom-btn" onclick="window.location.href='{{ url_for('admin_panel') }}'">Manage Images</button>
+            </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        </div>
+
+        <!--  Start User related section -->
+
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Start Form Container -->
+                <div class="upload-form-container">
+                    <form action="/admin_manage_users" method="post" enctype="multipart/form-data">
+                        <h4>Add or Update User Form</h4>
+
+                        {% if user_form_msg != None %}
+                            <div class="alert alert-info alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ user_form_msg }}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label name="Image Category">Username</label>
+                            <input type="text" name="username" placeholder="Username" minlength="2" pattern="[A-Za-z]{1,}[0-9]{1,}" title="Alpha numeric username. (E.g. ab123)" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label name="Image Category">Password</label>
+                            <input type="password" name="password" placeholder="Password" minlength="4" pattern="[A-Za-z!@#$*0-9]{1,}[0-9!@#$*]{1,}" title="Special characters allowed: !@#$* \n Alpha numeric username. (E.g. ab123)" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label name="Image Category">Confirm password</label>
+                            <input type="password" name="confirm_password" placeholder="Confirm password" minlength="4" pattern="[A-Za-z!@#$*0-9]{1,}[0-9!@#$*]{1,}" title="Special characters allowed: !@#$* \n Alpha numeric username. (E.g. ab123)" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <input type="submit" name="submit" value="Submit" class="btn form-btn">
+                    </form>
+
+                </div>
+                <!-- End form container -->
+            </div>
+
+            <div class="col-sm-8 col-md-8 col-lg-8">
+                <div class="res-img-container">
+                    {% if session['update_success_msg'] %}
+                        <div class="alert alert-info alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ session['update_success_msg'] }}
+                        </div>
+                    {% endif %}
+                    {% if user_table_msg == "User deleted successfully." %}
+                        <div class="alert alert-info alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ user_table_msg }}
+                        </div>
+                    {% endif %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{user[0]}}</td>
+                                    <td>{{user[1]}}</td>
+                                    <td>{{user[2][0] + "**********" + user[2][-1]}}</td>
+                                    <td>
+
+                                        <button class="btn btn-warning btn-xs" onclick="window.location.href='{{ url_for( 'admin_update_users', id=user[0]) }}';">Edit</button>
+                                        <button class="btn btn-danger btn-xs" onclick="window.location.href='{{ url_for( 'admin_manage_users', del_username=user[1], del_password=user[2]) }}';">Delete</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+                            <ul class="pager">
+
+                                {% if prev_page==0 %}
+                                    <li class="disabled"><a href="{{ url_for('admin_manage_users', page=prev_page) }}"><span class="glyphicon glyphicon-arrow-left"></span> &nbsp;  Previous </a></li> &emsp;
+                                 {% else %}
+                                    <li><a href="{{ url_for('admin_manage_users', page=prev_page) }}"><span class="glyphicon glyphicon-arrow-left"></span> &nbsp;  Previous </a></li> &emsp;
+                                 {% endif %}
+
+                                 {% if next_page==total_pages+1 %}
+                                    <li class="disabled"><a href="{{ url_for('admin_manage_users', page=next_page) }}">Next &nbsp; <span class="glyphicon glyphicon-arrow-right"></span> </a></li>
+                                 {% else %}
+                                    <li><a href="{{ url_for('admin_manage_users', page=next_page) }}">Next &nbsp; <span class="glyphicon glyphicon-arrow-right"></span> </a></li>
+                                 {% endif %}
+                             </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- End user related section -->
+
+    </div>
+
+</body>
+</html>
